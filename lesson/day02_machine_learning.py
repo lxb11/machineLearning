@@ -8,6 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction import DictVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
 
@@ -219,6 +220,53 @@ def decision_iris():
     return None
 
 
+def decision_titanic():
+    """
+    titanic 案例
+    :return:
+    """
+    # 1、获取数据
+    path = "D:/pyhtonProject/Machine_Learning/resources/titanic/titanic.csv"
+    data = pd.read_csv(path)
+    titanic = data.copy()
+
+    # 筛选特征值和目标值
+    x = titanic[["pclass", "age", "sex", "survived"]]
+    x.head()
+    # 2、数据处理
+    # 1）缺失值处理
+    x["age"].dropna()
+    xx = x[["pclass", "age", "sex"]]
+    yy = x["survived"]
+    xx.head()
+    yy.head()
+    # 2) 转换成字典
+    xx = xx.to_dict(orient="records")
+    # 3、划分数据集
+    x_train, x_test, y_train, y_test = train_test_split(xx, yy, random_state=22)
+    # 4、字典特征抽取
+    transfer = DictVectorizer()
+    x_train = transfer.fit_transform(x_train)
+    x_test = transfer.transform(x_test)
+    # 5、决策树预估器
+    estimator = DecisionTreeClassifier(criterion="entropy")
+    estimator.fit(x_train, y_train)
+    # 6、模型评估
+    # 方法1：直接比对真实值和预测值
+    y_predict = estimator.predict(x_test)
+    print("y_predict:\n", y_predict)
+    print("直接比对真实值和预测值:\n", y_test == y_predict)
+    # 方法2：计算准确率
+    score = estimator.score(x_test, y_test)
+    print("准确率为：\n", score)
+    # 可视化决策树
+    export_graphviz(estimator, out_file="./titanic_tree.dot", feature_names=transfer.get_feature_names())
+    print("done")
+
+    print(x)
+    return None
+
+
 if __name__ == "__main__":
     # 代码1：用KNN算法对鸢尾花进行分类
     # knn_iris()
@@ -229,4 +277,6 @@ if __name__ == "__main__":
     # 代码4：用朴素贝叶斯算法对新闻进行分类
     # nb_news()
     # 代码5：用决策树对鸢尾花进行分类
-    decision_iris()
+    # decision_iris()
+    # 代码6：titanic案例
+    decision_titanic()
