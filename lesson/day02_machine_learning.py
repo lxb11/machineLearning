@@ -11,6 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction import DictVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn.ensemble import RandomForestClassifier
 
 
 def knn_iris():
@@ -267,6 +268,51 @@ def decision_titanic():
     return None
 
 
+def random_forest_demo():
+    """
+    随机森林
+    :return:
+    """
+    # 1）获取数据
+    iris = load_iris()
+    # 2）划分数据集
+    x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, random_state=22)
+    # 3）特征工程：标准化
+    transfer = StandardScaler()
+    # x_train = transfer.fit_transform(x_train)
+    transfer.fit(x_train)
+    x_train = transfer.transform(x_train)
+    x_test = transfer.transform(x_test)
+
+    # 4）随机森林算法预估器
+    estimator = RandomForestClassifier()
+
+    # 加入网格搜索与交叉验证
+    # 参数准备
+    param_dict = {"n_estimators": [120, 200, 500, 800, 1200], "max_depth": [5, 8, 15, 25, 30]}
+    estimator = GridSearchCV(estimator, param_grid=param_dict, cv=10)
+    estimator.fit(x_train, y_train)
+    # 5）模型评估
+    # 方法1：直接比对真实值和预测值
+    y_predict = estimator.predict(x_test)
+    print("y_predict:\n", y_predict)
+    print("直接比对真实值和预测值:\n", y_test == y_predict)
+    # 方法2：计算准确率
+    score = estimator.score(x_test, y_test)
+    print("准确率为：\n", score)
+
+    # 最佳参数：best_params_
+    print("最佳参数：\n", estimator.best_params_)
+    # 最佳结果：best_score_
+    print("最佳结果：\n", estimator.best_score_)
+    # 最佳估计器：best_estimator_
+    print("最佳估计器：\n", estimator.best_estimator_)
+    # 交叉验证结果：cv_results_
+    print("交叉验证结果：\n", estimator.cv_results_)
+
+    return None
+
+
 if __name__ == "__main__":
     # 代码1：用KNN算法对鸢尾花进行分类
     # knn_iris()
@@ -279,4 +325,6 @@ if __name__ == "__main__":
     # 代码5：用决策树对鸢尾花进行分类
     # decision_iris()
     # 代码6：titanic案例
-    decision_titanic()
+    # decision_titanic()
+    # 代码7：随机森林案例
+    random_forest_demo()
