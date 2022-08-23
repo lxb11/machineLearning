@@ -279,7 +279,6 @@ def random_forest_demo():
     x_train, x_test, y_train, y_test = train_test_split(iris.data, iris.target, random_state=22)
     # 3）特征工程：标准化
     transfer = StandardScaler()
-    # x_train = transfer.fit_transform(x_train)
     transfer.fit(x_train)
     x_train = transfer.transform(x_train)
     x_test = transfer.transform(x_test)
@@ -290,7 +289,7 @@ def random_forest_demo():
     # 加入网格搜索与交叉验证
     # 参数准备
     param_dict = {"n_estimators": [120, 200, 500, 800, 1200], "max_depth": [5, 8, 15, 25, 30]}
-    estimator = GridSearchCV(estimator, param_grid=param_dict, cv=10)
+    estimator = GridSearchCV(estimator, param_grid=param_dict, cv=3)
     estimator.fit(x_train, y_train)
     # 5）模型评估
     # 方法1：直接比对真实值和预测值
