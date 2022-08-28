@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import SGDRegressor, Ridge, LogisticRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, classification_report, roc_auc_score
 
 
 def liner1():
@@ -158,6 +158,14 @@ def cancer_demo():
     score = estimator.score(x_test, y_test)
     print("准确率为：\n", score)
 
+    # 查看精确率、召回率、F1-score
+    report = classification_report(y_test, y_predict, labels=[2, 4], target_names=["良性", "恶性"])
+    print("report: \n", report)
+    # y_true： 每个样本的真实类别，必须为0（反例），1（正例）标记
+    # 将y_test 转换成 0 1
+    y_true = np.where(y_test > 3, 1, 0)
+    score = roc_auc_score(y_true, y_predict)
+    print("roc_auc_score: \n", score)
     return None
 
 
