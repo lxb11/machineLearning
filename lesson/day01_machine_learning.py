@@ -10,6 +10,7 @@ from sklearn.feature_selection import VarianceThreshold
 from sklearn.decomposition import PCA
 import jieba
 from scipy.stats import pearsonr
+from sklearn.cluster import KMeans
 
 
 def datasets_demo():
@@ -197,6 +198,13 @@ def variance_demo():
     data_new = transfer.fit_transform(data)
     print("data_new: \n", data_new, data_new.shape)
 
+    # k-means
+    estimator = KMeans(n_clusters=3)
+    estimator.fit(data_new)
+    y_predict = estimator.predict(data_new)
+    print("y_predict:\n", y_predict[:500])
+    print("-----------------------------------")
+
     # 计算某两个变量之间的相关系数
     r1 = pearsonr(data["pe_ratio"], data["pb_ratio"])
     print("相关系数：\n", r1)
@@ -240,6 +248,6 @@ if __name__ == "__main__":
     # 代码9：标准化
     # stand_demo()
     # 代码10：低方差特征过滤
-    # variance_demo()
+    variance_demo()
     # 代码11：PCA降维
-    pca_demo()
+    # pca_demo()

@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.linear_model import SGDRegressor, Ridge, LogisticRegression
 from sklearn.metrics import mean_squared_error, classification_report, roc_auc_score
+import joblib
 
 
 def liner1():
@@ -142,8 +143,13 @@ def cancer_demo():
     x_train = transfer.fit_transform(x_train)
     x_test = transfer.transform(x_test)
     # 5、预估器流程
-    estimator = LogisticRegression()
-    estimator.fit(x_train, y_train)
+    # estimator = LogisticRegression()
+    # estimator.fit(x_train, y_train)
+
+    # 保存模型
+    # joblib.dump(estimator, "./my_ridge.pkl")
+    # 加载模型
+    estimator = joblib.load("./my_ridge.pkl")
 
     # 逻辑回归的模型参数：回归系数和偏置
     print("逻辑回归-回归系数：\n", estimator.coef_)
