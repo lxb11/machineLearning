@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 import jieba
 from scipy.stats import pearsonr
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
 
 def datasets_demo():
@@ -204,6 +205,9 @@ def variance_demo():
     y_predict = estimator.predict(data_new)
     print("y_predict:\n", y_predict[:500])
     print("-----------------------------------")
+    # 模型评估-轮廓系数
+    score = silhouette_score(data_new, y_predict)
+    print("轮廓系数：\n", score)
 
     # 计算某两个变量之间的相关系数
     r1 = pearsonr(data["pe_ratio"], data["pb_ratio"])
