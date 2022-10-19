@@ -52,7 +52,7 @@ def demo03():
     # 4、查看灰度图片的维度信息
     print(gray_cat.shape)
     # 5、保存灰度图像
-    cv2.imwrite("images/cat_gray.png", gray_cat)
+    cv2.imwrite("images/cat_gray_02.png", gray_cat)
 
 
 if __name__ == "__main__":
