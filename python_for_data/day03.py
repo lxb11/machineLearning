@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 from collections import defaultdict
+import re
+from functools import partial
 
 
 def demo01():
@@ -248,6 +250,170 @@ def demo08():
     return None
 
 
+def my_function(x, y, z=1.5):
+    """
+    函数是Python中最主要也是最重要的代码组织和复用手段。
+    作为最重要的原则，如果你要重复使用相同或非常类似的代码，
+    就需要写一个函数。通过给函数起一个名字，还可以提高代码的可读性。
+    :param x: 第一个参数 位置参数
+    :param y: 第二个参数 位置参数
+    :param z: 关键字参数
+    :return:
+    """
+    if z > 1:
+        return z * (x + y)
+    else:
+        return z / (x + y)
+
+
+def demo09():
+    """
+    函数
+    :return:
+    """
+    print(my_function(5, 6, z=0.7))
+    print(my_function(3.14, 7, 3.5))
+    print(my_function(10, 20))
+    print(my_function(x=5, y=6, z=7))
+    print(my_function(y=6, x=5, z=7))
+    return None
+
+
+def f():
+    """
+    返回多个值
+    :return:
+    """
+    a = 5
+    b = 6
+    c = 7
+    return a, b, c
+
+
+def demo10():
+    """
+
+    :return:
+    """
+    a, b, c = f()
+    print("a = {0}; b = {1}; c = {2};".format(a, b, c))
+    return_value = f()
+    # 在数据分析和其他科学计算应用中，你会发现自己常常这么干。
+    # 该函数其实只返回了一个对象，也就是一个元组，最后该元组会被
+    # 拆包到各个结果变量中。在上面的例子中，我们还可以这样写：
+    print(return_value)
+    return None
+
+
+def demo11():
+    """
+    函数也是对象
+    :return:
+    """
+    '''
+    由于Python函数都是对象，因此，在其他语言中较难表达
+    的一些设计思想在Python中就要简单很多了。假设我们有
+    下面这样一个字符串数组，希望对其进行一些数据清理工作并执行一堆转换：
+    '''
+    states = ['   Alabama ', 'Georgia!', 'Georgia', 'georgia', 'FlOrIda',
+              'south   carolina##', 'West virginia?']
+    print(clean_strings(states))
+    # 其实还有另外一种不错的办法：将需要在一组给定字符串上执行的所有运算做成一个列表：
+    clean_ops = [str.strip, remove_punctuation, str.title]
+    print(clean_strings_02(states, clean_ops))
+    # 还可以将函数用作其他函数的参数，比如内置的map函数，它用于在一组数据上应用一个函数：
+    for x in map(remove_punctuation, states):
+        x = x.strip()
+        print(x.title())
+    return None
+
+
+def remove_punctuation(value):
+    return re.sub('[!#?]', '', value)
+
+
+def clean_strings_02(strings, ops):
+    result = []
+    for value in strings:
+        for function in ops:
+            value = function(value)
+        result.append(value)
+    return result
+
+
+def clean_strings(strings):
+    result = []
+    for value in strings:
+        value = value.strip()
+        value = re.sub('[!#?]', '', value)
+        value = value.title()
+        result.append(value)
+    return result
+
+
+def demo12():
+    """
+    匿名（lambda）函数
+    :return:
+    """
+    '''
+    Python支持一种被称为匿名的、或lambda函数。
+    它仅由单条语句组成，该语句的结果就是返回值。
+    它是通过lambda关键字定义的，这个关键字没有别的含义，
+    仅仅是说“我们正在声明的是一个匿名函数”。
+    '''
+    equiv_anon = lambda x: x * 2
+    print(equiv_anon)
+    print(short_function(2))
+    '''
+    本书其余部分一般将其称为lambda函数。它们在数据分析工作中非常方便，
+    因为你会发现很多数据转换函数都以函数作为参数的。直接传入lambda函数
+    比编写完整函数声明要少输入很多字（也更清晰），甚至比将lambda函数赋值给
+    一个变量还要少输入很多字。看看下面这个简单得有些傻的例子：
+    '''
+    # 虽然你可以直接编写[x *2for x in ints]，但是这里我们可以非常轻松地传入一个自定义运算给apply_to_list函数
+    ints = [4, 0, 1, 5, 6]
+    print(apply_to_list(ints, lambda x: x * 2))
+    # 再来看另外一个例子。假设有一组字符串，你想要根据各字符串不同字母的数量对其进行排序：
+    strings = ['foo', 'card', 'bar', 'aaaa', 'abab']
+    strings.sort(key=lambda x: len(set(list(x))))
+    print(strings)
+    return None
+
+
+def short_function(x):
+    return x * 2
+
+
+def apply_to_list(some_list, f):
+    return [f(x) for x in some_list]
+
+
+def demo13():
+    """
+    柯里化：部分参数应用
+    :return:
+    """
+    '''
+    柯里化（currying）是一个有趣的计算机科学术语，
+    它指的是通过“部分参数应用”（partial argument application）
+    从现有函数派生出新函数的技术。例如，假设我们有一个执行两数相加的简单函数：
+    '''
+    # 通过这个函数，我们可以派生出一个新的只有一个参数的函数——add_five，它用于对其参数加5：
+    add_five_01 = lambda y: add_numbers(5, y)
+    print(add_five_01(1))
+    # add_numbers的第二个参数称为“柯里化的”（curried）。
+    # 这里没什么特别花哨的东西，因为我们其实就只是定义了一个可以
+    # 调用现有函数的新函数而已。内置的functools模块可以用partial函数将此过程简化：
+    add_five_2 = partial(add_numbers, 5)
+    print(add_five_2(2))
+    return None
+
+
+def add_numbers(x, y):
+    return x + y
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
@@ -256,4 +422,9 @@ if __name__ == "__main__":
     # demo05()
     # demo06()
     # demo07()
-    demo08()
+    # demo08()
+    # demo09()
+    # demo10()
+    # demo11()
+    # demo12()
+    demo13()
