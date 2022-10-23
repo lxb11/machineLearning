@@ -179,10 +179,81 @@ def demo06():
     return None
 
 
+def demo07():
+    """
+    列表、集合和字典推导式
+    :return:
+    """
+    # 列表推导式是Python最受喜爱的特性之一。它允许用户方便的从一个集合过滤元素，
+    # 形成列表，在传递参数的过程中还可以修改元素。形式如下：
+    # [expr for val in collection if condition]
+    # 它等同于下面的for循环;
+    # result = []
+    # for val in collection:
+    #     if condition:
+    #         result.append(expr)
+    # filter条件可以被忽略，只留下表达式就行。例如，
+    # 给定一个字符串列表，我们可以过滤出长度在2及以下的字符串，并将其转换成大写：
+    strings = ['a', 'as', 'bat', 'car', 'dove', 'python']
+    print([x.upper() for x in strings if len(x) > 2])
+    # 用相似的方法，还可以推导集合和字典。字典的推导式如下所示：
+    # dict_comp = {key-expr : value-expr for value in collection if condition}
+    # 集合的推导式与列表很像，只不过用的是尖括号：
+    # set_comp = {expr for value in collection if condition}
+    # 与列表推导式类似，集合与字典的推导也很方便，而且使代码的读写都很容易。
+    # 来看前面的字符串列表。假如我们只想要字符串的长度，用集合推导式的方法非常方便：
+    unique_lengths = {len(x) for x in strings}
+    print(unique_lengths)
+    # map函数可以进一步简化：
+    print(set(map(len, strings)))
+    # 作为一个字典推导式的例子，我们可以创建一个字符串的查找映射表以确定它在列表中的位置：
+    loc_mapping = {val: index for index, val in enumerate(strings)}
+    print(loc_mapping)
+    return None
+
+
+def demo08():
+    """
+    嵌套列表推导式
+    :return:
+    """
+    # 假设我们有一个包含列表的列表，包含了一些英文名和西班牙名：
+    all_data = [['John', 'Emily', 'Michael', 'Mary', 'Steven'],
+                ['Maria', 'Juan', 'Javier', 'Natalia', 'Pilar']]
+    # 你可能是从一些文件得到的这些名字，然后想按照语言进行分类。
+    # 现在假设我们想用一个列表包含所有的名字，这些名字中包含两个或更多的e。可以用for循环来做：
+    names_of_interest = []
+    for names in all_data:
+        enough_es = [name for name in names if name.count('e') >= 2]
+        names_of_interest.extend(enough_es)
+    print(names_of_interest)
+    # 可以用嵌套列表推导式的方法，将这些写在一起，如下所示：
+    result = [name for names in all_data for name in names if name.count('e') >= 2]
+    print(result)
+    # 嵌套列表推导式看起来有些复杂。列表推导式的for部分是根据嵌套的顺序，
+    # 过滤条件还是放在最后。下面是另一个例子，我们将一个整数元组的列表扁平化成了一个整数列表：
+    some_tuples = [(1, 2, 3), (4, 5, 6), (7, 8, 9)]
+    flattened = [x for tup in some_tuples for x in tup]
+    print(flattened)
+    # 记住，for表达式的顺序是与嵌套for循环的顺序一样（而不是列表推导式的顺序）：
+    flattened_02 = []
+    for tup in some_tuples:
+        for x in tup:
+            flattened_02.append(x)
+    print(flattened_02)
+    # 你可以有任意多级别的嵌套，但是如果你有两三个以上的嵌套，
+    # 你就应该考虑下代码可读性的问题了。分辨列表推导式的列表推导式中的语法也是很重要的：
+    res = [[x for x in tup] for tup in some_tuples]
+    print(res)
+    return None
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
     # demo03()
     # demo04()
     # demo05()
-    demo06()
+    # demo06()
+    # demo07()
+    demo08()
