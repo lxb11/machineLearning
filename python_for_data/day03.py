@@ -122,8 +122,67 @@ def demo04():
     return None
 
 
+def demo05():
+    """
+    有效的键类型
+    :return:
+    """
+    '''
+    字典的值可以是任意Python对象，
+    而键通常是不可变的标量类型（整数、浮点型、字符串）
+    或元组（元组中的对象必须是不可变的）。这被称为“可哈希性”。
+    可以用hash函数检测一个对象是否是可哈希的（可被用作字典的键）：
+    '''
+    ret_hash = hash('string')
+    print(ret_hash)
+    print(hash((1, 2, (2, 3))))
+    # 要用列表当做键，一种方法是将列表转化为元组，只要内部元素可以被哈希，它也就可以被哈希：
+    d = {tuple([1, 2, 3]): 5}
+    print(d)
+    return None
+
+
+def demo06():
+    """
+    集合
+    :return:
+    """
+    # 集合是无序的不可重复的元素的集合。你可以把它当做字典，
+    # 但是只有键没有值。可以用两种方式创建集合：通过set函数或使用尖括号set语句：
+    print(set([2, 2, 2, 1, 3, 3]))
+    print({2, 2, 2, 1, 3, 3})
+    # 集合支持合并、交集、差分和对称差等数学集合运算。考虑两个示例集合：
+    a = {1, 2, 3, 4, 5}
+    b = {3, 4, 5, 6, 7, 8}
+    # 合并是取两个集合中不重复的元素。可以用union方法，或者|运算符：
+    print(a.union(b))
+    print(a | b)
+    # 交集的元素包含在两个集合中。可以用intersection或&运算符：
+    print(a.intersection(b))
+    print(a & b)
+    # 所有逻辑集合操作都有另外的原地实现方法，可以直接用结果替代集合的内容。对于大的集合，这么做效率更高：
+    c = a.copy()
+    c |= b
+    print(c)
+    d = a.copy()
+    d &= b
+    print(d)
+    # 与字典类似，集合元素通常都是不可变的。要获得类似列表的元素，必须转换成元组：
+    my_data = [1, 2, 3, 4]
+    my_set = {tuple(my_data)}
+    print(my_set)
+    # 你还可以检测一个集合是否是另一个集合的子集或父集：
+    a_set = {1, 2, 3, 4, 5}
+    print({1, 2, 3}.issubset(a_set))
+    print(a_set.issuperset({1, 2, 3}))
+    print({1, 2, 3} == {3, 2, 1})
+    return None
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
     # demo03()
-    demo04()
+    # demo04()
+    # demo05()
+    demo06()
