@@ -453,6 +453,30 @@ def squares(n=10):
         yield i ** 2
 
 
+def demo15():
+    """
+    生成器表达式
+    :return:
+    """
+    # 另一种更简洁的构造生成器的方法是使用生成器表达式（generator expression）。
+    # 这是一种类似于列表、字典、集合推导式的生成器。其创建方式为，把列表推导式
+    # 两端的方括号改成圆括号：
+    gen = (x ** 2 for x in range(100))
+    print(gen)
+    # 它跟下面这个冗长得多的生成器是完全等价的：
+    gen_2 = _make_gen()
+    print(gen_2)
+    # 生成器表达式也可以取代列表推导式，作为函数参数：
+    print(sum(x ** 2 for x in range(100)))
+    print(dict((i, i * 2) for i in range(5)))
+    return None
+
+
+def _make_gen():
+    for x in range(100):
+        yield x ** 2
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
@@ -467,4 +491,5 @@ if __name__ == "__main__":
     # demo11()
     # demo12()
     # demo13()
-    demo14()
+    # demo14()
+    demo15()
