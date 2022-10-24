@@ -414,6 +414,45 @@ def add_numbers(x, y):
     return x + y
 
 
+def demo14():
+    """
+    生成器
+    :return:
+    """
+    '''
+    能以一种一致的方式对序列进行迭代（比如列表中的对象或文件中的行）
+    是Python的一个重要特点。这是通过一种叫做迭代器协议（iterator 
+    protocol，它是一种使对象可迭代的通用方式）的方式实现的，一个原
+    生的使对象可迭代的方法。比如说，对字典进行迭代可以得到其所有的键：
+    '''
+    some_dict = {'a': 1, 'b': 2, 'c': 3}
+    for key in some_dict:
+        print(key)
+    # 当你编写for key in some_dict时，Python解释器首先会尝试从some_dict创建一个迭代器：
+    dict_iterator = iter(some_dict)
+    print(dict_iterator)
+    # 迭代器是一种特殊对象，它可以在诸如for循环之类的上下文中向Python解释器输送对象。
+    # 大部分能接受列表之类的对象的方法也都可以接受任何可迭代对象。比如min、max、sum
+    # 等内置方法以及list、tuple等类型构造器：
+    print(list(dict_iterator))
+    # 生成器（generator）是构造新的可迭代对象的一种简单方式。
+    # 一般的函数执行之后只会返回单个值，而生成器则是以延迟的
+    # 方式返回一个值序列，即每返回一个值之后暂停，直到下一个值
+    # 被请求时再继续。要创建一个生成器，只需将函数中的return替换为yeild即可：
+    print("------------------")
+    gen = squares()
+    print(gen)
+    for x in gen:
+        print(x, end=' ')
+    return None
+
+
+def squares(n=10):
+    print('Generating squares from 1 to {0}'.format(n ** 2))
+    for i in range(1, n + 1):
+        yield i ** 2
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
@@ -427,4 +466,5 @@ if __name__ == "__main__":
     # demo10()
     # demo11()
     # demo12()
-    demo13()
+    # demo13()
+    demo14()
