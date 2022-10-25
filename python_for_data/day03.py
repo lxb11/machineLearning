@@ -3,6 +3,7 @@
 from collections import defaultdict
 import re
 from functools import partial
+import itertools
 
 
 def demo01():
@@ -477,6 +478,23 @@ def _make_gen():
         yield x ** 2
 
 
+def demo16():
+    """
+    itertools模块
+    :return:
+    """
+    '''
+    标准库itertools模块中有一组用于许多常见数据算法的生成器。
+    例如，groupby可以接受任何序列和一个函数。它根据函数的返回值
+    对序列中的连续元素进行分组。下面是一个例子：
+    '''
+    first_letter = lambda x: x[0]
+    names = ['Alan', 'Adam', 'Wes', 'Will', 'Albert', 'Steven']
+    for letter, names in itertools.groupby(names, first_letter):
+        print(letter, list(names))  # names is generator
+    return None
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
@@ -492,4 +510,5 @@ if __name__ == "__main__":
     # demo12()
     # demo13()
     # demo14()
-    demo15()
+    # demo15()
+    demo16()
