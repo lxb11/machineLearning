@@ -130,8 +130,33 @@ def demo04():
     return None
 
 
+def demo05():
+    """
+    NumPy数组的运算
+    :return:
+    """
+    '''
+    数组很重要，因为它使你不用编写循环即可对数据执行批量运算。
+    NumPy用户称其为矢量化（vectorization）。大小相等的数组
+    之间的任何算术运算都会将运算应用到元素级：
+    '''
+    arr = np.array([[1., 2., 3.], [4., 5., 6.]])
+    print(arr)
+    print(arr * arr)
+    print(arr - arr)
+    # 数组与标量的算术运算会将标量值传播到各个元素
+    print(1 / arr)
+    print(arr ** 0.5)
+    # 大小相同的数组之间的比较会生成布尔值数组
+    arr2 = np.array([[0., 4., 1.], [7., 2., 12.]])
+    print(arr2)
+    print(arr2 > arr)
+    return None
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
     # demo03()
-    demo04()
+    # demo04()
+    demo05()
