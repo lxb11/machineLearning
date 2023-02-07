@@ -3,6 +3,7 @@
 import time
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # NumPy的ndarray：一种多维数组对象
@@ -218,10 +219,152 @@ def demo06():
     return None
 
 
+def demo07():
+    """
+    布尔型索引
+    :return:
+    """
+    # 来看这样一个例子，
+    # 假设我们有一个用于存储数据的数组以及一个存储姓名的数组（含有重复项）。在这里，
+    # 我将使用numpy.random中的randn函数生成一些正态分布的随机数据：
+    names = np.array(['Bob', 'Joe', 'Will', 'Bob', 'Will', 'Joe', 'Joe'])
+    data = np.random.randn(7, 4)
+    print(names)
+    print(data)
+    # 假设每个名字都对应data数组中的一行，而我们想要选出对应于名字"Bob"的所有行。
+    # 跟算术运算一样，数组的比较运算（如==）也是矢量化的。
+    # 因此，对names和字符串"Bob"的比较运算将会产生一个布尔型数组：
+    print(names == 'Bob')
+    # 这个布尔型数组可用于数组索引：
+    print(data[names == 'Bob'])
+    # 下面的例子，我选取了names == 'Bob'的行，并索引了列：
+    print(data[names == 'Bob', 2:])
+    print(data[names == 'Bob', 3])
+    # 要选择除"Bob"以外的其他值，既可以使用不等于符号（!=），也可以通过~对条件进行否定：
+    print(data[~(names == 'Bob')])
+    # 通过布尔型数组设置值是一种经常用到的手段。为了将data中的所有负值都设置为0，我们只需：
+    data[data < 0] = 0
+    print(data)
+    # 通过一维布尔数组设置整行或列的值也很简单：
+    data[names != 'Joe'] = 7
+    print(data)
+    return None
+
+
+def demo08():
+    """
+    花式索引
+    :return:
+    """
+    arr = np.empty((8, 4))
+    for i in range(8):
+        arr[i] = i
+    print(arr)
+    # 为了以特定顺序选取行子集，只需传入一个用于指定顺序的整数列表或ndarray即可：
+    print(arr[[4, 3, 0, 6]])
+    # 这段代码确实达到我们的要求了！使用负数索引将会从末尾开始选取行：
+    print(arr[[-3, -5, -7]])
+    # 一次传入多个索引数组会有一点特别。它返回的是一个一维数组，其中的元素对应各个索引元组：
+    arr = np.arange(32).reshape((8, 4))
+    print(arr)
+    # 最终选出的是元素(1,0)、(5,3)、(7,1)和(2,2)。无论数组是多少维的，花式索引总是一维的。
+    # 记住，花式索引跟切片不一样，它总是将数据复制到新数组中。
+    print(arr[[1, 5, 7, 2], [0, 3, 1, 2]])
+    return None
+
+
+def demo09():
+    """
+    数组转置和轴对换
+    :return:
+    """
+    # 转置是重塑的一种特殊形式，它返回的是源数据的视图（不会进行任何复制操作）。
+    # 数组不仅有transpose方法，还有一个特殊的T属性：
+    arr = np.arange(15).reshape((3, 5))
+    print(arr)
+    print(arr.T)
+    # 在进行矩阵计算时，经常需要用到该操作，比如利用np.dot计算矩阵内积：
+    arr1 = np.random.randn(6, 3)
+    print(arr1)
+    print(np.dot(arr1.T, arr1))
+    return None
+
+
+def demo10():
+    """
+    利用数组进行数据处理
+    :return:
+    """
+    # 作为简单的例子，假设我们想要在一组值（网格型）上计算函数sqrt(x^2+y^2)。
+    # np.meshgrid函数接受两个一维数组，并产生两个二维矩阵（对应于两个数组中所有的(x,y)对）：
+    points = np.arange(-5, 5, 0.01)  # 1000 equally spaced points
+    print(points)
+    xs, ys = np.meshgrid(points, points)
+    print(ys)
+    # 现在，对该函数的求值运算就好办了，把这两个数组当做两个浮点数那样编写表达式即可：
+    z = np.sqrt(xs ** 2 + ys ** 2)
+    print(z)
+    # 作为第9章的先导，我用matplotlib创建了这个二维数组的可视化：
+    plt.imshow(z, cmap=plt.cm.gray)
+    plt.colorbar()
+    plt.title("Image plot of $\sqrt{x^2 + y^2}$ for a grid of values")
+    plt.show()
+    return None
+
+
+def demo11():
+    """
+    数学和统计方法
+    :return:
+    """
+    arr = np.random.randn(5, 4)
+    print(arr)
+    print(arr.mean())
+    print(np.mean(arr))
+    print(arr.sum())
+    # mean和sum这类的函数可以接受一个axis选项参数，用于计算该轴向上的统计值，
+    # 最终结果是一个少一维的数组：
+    # 这里，arr.mean(1)是“计算行的平均值”，arr.sum(0)是“计算每列的和”。
+    print(arr.mean(axis=1))
+    print(arr.sum(axis=0))
+    # 其他如cumsum和cumprod之类的方法则不聚合，而是产生一个由中间结果组成的数组：
+    arr1 = np.array([0, 1, 2, 3, 4, 5, 6, 7])
+    print(arr1.cumsum())
+    # 在多维数组中，累加函数（如cumsum）返回的是同样大小的数组，
+    # 但是会根据每个低维的切片沿着标记轴计算部分聚类：
+    arr2 = np.array([[0, 1, 2], [3, 4, 5], [6, 7, 8]])
+    print(arr2)
+    print(arr2.cumsum(axis=0))
+    print(arr2.cumprod(axis=1))
+    return None
+
+
+def demo12():
+    """
+    示例：随机漫步
+    :return:
+    """
+    nsteps = 1000
+    draws = np.random.randint(0, 2, size=nsteps)
+    steps = np.where(draws > 0, 1, -1)
+    walk = steps.cumsum()
+    print(walk.min())
+    print(walk.max())
+    print(walk)
+    print((np.abs(walk) >= 10).argmax())
+    return None
+
+
 if __name__ == "__main__":
     # demo01()
     # demo02()
     # demo03()
     # demo04()
     # demo05()
-    demo06()
+    # demo06()
+    # demo07()
+    # demo08()
+    # demo09()
+    # demo10()
+    # demo11()
+    demo12()
